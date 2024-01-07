@@ -1,109 +1,46 @@
 "use-strict";
-let allFirstDigits = [];
-let allLastDigits = [];
-let theOperator = false;
-let selectedOparator = [];
-let finalResult = 0;
 
-const allNumberDigit = document.querySelectorAll(".number");
-const allOperator = document.querySelectorAll(".operator_digit");
-const displayFirstDigits = document.querySelector(".first_digit");
-const displayLastDigits = document.querySelector(".last_digit");
-const backSpaceEl = document.getElementById("backspace");
+const btnDisplay = document.querySelectorAll(".to_display");
+const display = document.querySelector(".display");
 const clearEverything = document.getElementById("c");
-const displayOperator = document.querySelector(".operator");
+const backSpace = document.getElementById("backspace");
+const equal = document.getElementById("equal");
+let displayValue;
 
-function showDisplayFirstDigits(theArray) {
-  let theFirstNumber = theArray.join("");
-  displayFirstDigits.textContent = theFirstNumber;
-  //   console.log(allFirstDigits);
-}
-
-function hideDisplayFirstDigits() {
-  displayFirstDigits.textContent = "0";
-  //   console.log(allFirstDigits);
-}
-
-function showDisplayLastDigits(theArray) {
-  let theLastNumber = theArray.join("");
-  displayLastDigits.textContent = theLastNumber;
-  displayLastDigits.style.display = "inline-block";
-  //   console.log(allFirstDigits);
-}
-
-function hideDisplayLastDigits() {
-  displayLastDigits.textContent = "";
-  displayLastDigits.style.display = "none";
-}
-
-function showDisplaysOperator(operator) {
-  displayOperator.textContent = operator;
-  displayOperator.style.display = "inline-block";
-  theOperator = true;
-  console.log(theOperator);
-}
-
-function hideDisplaysOperator(operator) {
-  displayOperator.textContent = "";
-  displayOperator.style.display = "none";
-  theOperator = false;
-  console.log(theOperator);
-}
-
-function backSpace(allFirstDigits) {
-  allFirstDigits.pop();
-}
-
-allNumberDigit.forEach((digit) => {
-  digit.addEventListener("click", (e) => {
-    if (!theOperator) {
-      let selectedDigit = Number(e.target.textContent);
-      allFirstDigits.push(selectedDigit);
-      showDisplayFirstDigits(allFirstDigits);
-      console.log();
-    } else {
-      let selectedDigit = Number(e.target.textContent);
-      allLastDigits.push(selectedDigit);
-      showDisplayLastDigits(allLastDigits);
-      console.log(allLastDigits);
+btnDisplay.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    if (display.value == 0 || display.value === "Error") {
+      display.value = "";
     }
+    displayValue = display.value += btn.value;
+    console.log(displayValue);
   });
 });
 
-allOperator.forEach((digit) => {
-  digit.addEventListener("click", (e) => {
-    let operatorSymbol = e.target.textContent;
-    let operatorType = e.target.id;
-    selectedOparator.push(operatorType);
-    showDisplaysOperator(operatorSymbol);
-    console.log(selectedOparator);
-  });
+clearEverything.addEventListener("click", () => {
+  display.value = "0";
 });
 
-backSpaceEl.addEventListener("click", (e) => {
-  if (!theOperator) {
-    allFirstDigits.pop();
-    showDisplayFirstDigits(allFirstDigits);
-    console.log(allFirstDigits);
-    if (allFirstDigits.length === 0) {
-      showDisplayFirstDigits([0]);
-    }
-  } else if (theOperator && allLastDigits.length === 0) {
-    hideDisplaysOperator();
-  } else if (theOperator && allLastDigits.length !== 0) {
-    allLastDigits.pop();
-    showDisplayLastDigits(allLastDigits);
-    console.log(allLastDigits);
+backSpace.addEventListener("click", () => {
+  const currentDisplay = document.querySelector(".display").value;
+  if (!(display.value === "Error")) {
+    document.querySelector(".display").value = currentDisplay.slice(0, -1);
   }
+  if (currentDisplay.length < 2) document.querySelector(".display").value = "0";
 });
 
-clearEverything.addEventListener("click", (e) => {
-  allFirstDigits = [];
-  hideDisplayFirstDigits(allFirstDigits);
+equal.addEventListener("click", calculate);
+function calculate() {
+  const expression = document.getElementById("display").value;
+  try {
+    const result = Function(`'use strict'; return (${expression});`)();
 
-  allLastDigits = [];
-  hideDisplayLastDigits(allLastDigits);
-
-  hideDisplaysOperator();
-  console.log(allFirstDigits, allLastDigits);
-});
+    if (result === Math.floor(result)) {
+      document.getElementById("display").value = result;
+    } else {
+      document.getElementById("display").value = result.toFixed(2);
+    }
+  } catch (error) {
+    document.getElementById("display").value = "Error";
+  }
+}
