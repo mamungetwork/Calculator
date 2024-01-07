@@ -161,5 +161,8 @@ main {
 @media screen and (max-width: 419px) {
   main {
     padding: 12px;
+    padding: 12px;
+    align-items: flex-start;
+    padding-top: 40px;
   }
 }/*# sourceMappingURL=style.css.map */
