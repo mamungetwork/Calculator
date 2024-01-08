@@ -4,6 +4,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Be Vietnam Pro", sans-serif;
+  touch-action: manipulation;
 }
 
 main {
@@ -88,10 +89,19 @@ main {
 }
 .calculator_container .calculation.have_result {
   display: block;
-  font-size: 20px;
+  font-size: 20px !important;
+  line-height: 28px !important;
+  font-weight: 400 !important;
+  opacity: 0.6;
+}
+.calculator_container .calculation.is_error {
+  font-size: 22px;
+  word-break: break-word;
   line-height: 28px;
   font-weight: 400;
-  opacity: 0.6;
+}
+.calculator_container .calculation.math_error {
+  color: red;
 }
 .calculator_container .buttons {
   margin-top: 20px;
@@ -145,4 +155,16 @@ main {
 .calculator_container .operator,
 .calculator_container .last_digit {
   display: none;
+}
+
+@media screen and (max-width: 430px) {
+  main {
+    padding: 4px;
+    padding-top: 30px;
+    align-items: flex-start;
+  }
+  .calculator_container {
+    width: 100%;
+    max-width: 100%;
+  }
 }/*# sourceMappingURL=style.css.map */
