@@ -13,13 +13,11 @@
         <div class="calculator_container">
             <div class="background"></div>
             <div class="display">
-                <p class="calculation">
-                    <span class="first_digit">0</span><span class="operator">-</span><span class="last_digit">0</span>
-                </p>
+                <p class="calculation"></p>
                 <p class="result">8</p>
             </div>
             <div class="buttons">
-                <button id="c" class="clean">C</button>
+                <button value="c" id="c" class="clean">C</button>
                 <button id="backspace" class="clean">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" x="0" y="0" viewBox="0 0 24 24"
                         xml:space="preserve" fill="#292929">
@@ -32,27 +30,27 @@
                             opacity="1" data-original="#292929"></path>
                     </svg>
                 </button>
-                <button id="modulas">%</button>
-                <button id="divide" class="orange operator_digit">÷</button>
+                <button value="%" id="modulas" class="is_display">%</button>
+                <button value="/" id="divide" class="orange is_display">÷</button>
 
-                <button id="seven" class="number">7</button>
-                <button id="eight" class="number">8</button>
-                <button id="nine" class="number">9</button>
-                <button id="multiply" class="orange operator_digit">×</button>
+                <button value="7" id="seven" class="number is_display">7</button>
+                <button value="8" id="eight" class="number is_display">8</button>
+                <button value="9" id="nine" class="number is_display">9</button>
+                <button value="*" id="multiply" class="orange is_display">×</button>
 
-                <button id="four" class="number">4</button>
-                <button id="five" class="number">5</button>
-                <button id="six" class="number">6</button>
-                <button id="sub" class="orange operator_digit">-</button>
+                <button value="4" id="four" class="number is_display">4</button>
+                <button value="5" id="five" class="number is_display">5</button>
+                <button value="6" id="six" class="number is_display">6</button>
+                <button value="-" id="sub" class="orange is_display">-</button>
 
-                <button id="one" class="number">1</button>
-                <button id="two" class="number">2</button>
-                <button id="three" class="number">3</button>
-                <button id="sum" class="orange operator_digit">+</button>
+                <button value="1" id="one" class="number is_display">1</button>
+                <button value="2" id="two" class="number is_display">2</button>
+                <button value="3" id="three" class="number is_display">3</button>
+                <button value="+" id="sum" class="orange is_display is_display">+</button>
 
-                <button id="zero" class="number">0</button>
-                <button id="point">.</button>
-                <button id="equal" class="orange">=</button>
+                <button value="0" id="zero" class="number is_display is_display">0</button>
+                <button value="." id="point" class="is_display">.</button>
+                <button value="=" id="equal" class="orange">=</button>
             </div>
         </div>
     </main>
