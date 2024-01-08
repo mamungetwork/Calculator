@@ -9,6 +9,7 @@ const equalBtn = document.getElementById("equal");
 const modulasBtn = document.getElementById("modulas");
 
 let isModulas = false;
+let errorText;
 
 displayBtn.forEach((btn) => {
   btn.addEventListener("click", (e) => {
@@ -69,7 +70,14 @@ function hideToDisplayResult(result) {
 }
 
 function backspaceHandle() {
-  displayCalculation.textContent = displayCalculation.textContent.slice(0, -1);
+  if (errorText) {
+    displayCalculation.textContent = "";
+  } else {
+    displayCalculation.textContent = displayCalculation.textContent.slice(
+      0,
+      -1
+    );
+  }
 }
 function cleanAllDisplay() {
   displayCalculation.textContent = "";
@@ -91,6 +99,7 @@ function handleCalculation() {
     showToDisplayResult(theResult);
   } catch (error) {
     showToDisplayText("Error");
+    errorText = error;
   }
 }
 
@@ -99,7 +108,6 @@ function modulasHandle() {
   let a, b, c;
   let theString = displayCalculation.textContent;
   let newArray = theString.split(/([%])/);
-  console.log(newArray.length);
   if (newArray.length <= 3) {
     [a, b, c] = newArray;
     a = Number(a);
