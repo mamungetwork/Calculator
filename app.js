@@ -147,6 +147,7 @@ function handleCalculation() {
   } catch (error) {
     displayCalculation.classList.add("math_error");
     errorText = error;
+    console.log(error);
   }
 }
 
@@ -171,6 +172,7 @@ function modulasHandle() {
 
 function resultEdit() {
   isResult = false;
+  isModulas = false;
   let currentResult = displayResult.textContent;
   displayCalculation.textContent = currentResult;
   hideToDisplayResult();
