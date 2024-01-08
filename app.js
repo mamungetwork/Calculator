@@ -5,6 +5,7 @@ let theOperator = false;
 let isPoint = false;
 let selectedOparator = [];
 let operatorType;
+let isResult = false;
 let finalResult = 0;
 
 const allNumberDigit = document.querySelectorAll(".number");
@@ -17,23 +18,21 @@ const pointDigit = document.getElementById("point");
 const equalBtn = document.getElementById("equal");
 const clearEverything = document.getElementById("c");
 const displayOperator = document.querySelector(".operator");
+const calculationAfter = document.querySelector(".calculation");
 
 function showDisplayFirstDigits(displayText) {
   // let theFirstNumber = theArray.join("");
   displayFirstDigits.textContent = displayText;
-  //   console.log(allFirstDigits);
 }
 
 function hideDisplayFirstDigits() {
   displayFirstDigits.textContent = "0";
-  //   console.log(allFirstDigits);
 }
 
 function showDisplayLastDigits(displayText) {
   // let theLastNumber = theArray.join("");
   displayLastDigits.textContent = displayText;
   displayLastDigits.style.display = "inline-block";
-  //   console.log(allFirstDigits);
 }
 
 function hideDisplayLastDigits() {
@@ -45,27 +44,31 @@ function showDisplaysOperator(operator) {
   displayOperator.textContent = operator;
   displayOperator.style.display = "inline-block";
   theOperator = true;
-  console.log(theOperator);
 }
 
 function hideDisplaysOperator(operator) {
   displayOperator.textContent = "";
   displayOperator.style.display = "none";
   theOperator = false;
-  // console.log(theOperator);
 }
 
 function showDisplaysResult(result) {
+  isResult = true;
+  resultType = Math.floor(result) === result;
+  let finalResult;
+  resultType ? (finalResult = result) : (finalResult = result.toFixed(2));
   displayResult.textContent = "";
-  displayResult.textContent = result;
+  displayResult.textContent = finalResult;
   displayResult.style.display = "block";
-  // console.log(theOperator);
+
+  calculationAfter.classList.add("have_result");
 }
 
 function hideDisplaysResult(result) {
+  isResult = false;
   displayResult.textContent = "";
   displayResult.style.display = "none";
-  // console.log(theOperator);
+  calculationAfter.classList.remove("have_result");
 }
 
 function backSpace(allFirstDigits) {
@@ -90,7 +93,6 @@ allNumberDigit.forEach((digit) => {
       theModifiedNumber = `${theModifiedNumber + selectedDigit}`;
       allFirstDigits[0] = theModifiedNumber;
       showDisplayFirstDigits(allFirstDigits);
-      // console.log(isPoint);
     } else if (theOperator && !isPoint) {
       let selectedDigit = Number(e.target.textContent);
 
@@ -101,13 +103,11 @@ allNumberDigit.forEach((digit) => {
 
       allLastDigits[0] = theDigit;
       showDisplayLastDigits(allLastDigits);
-      console.log(allLastDigits);
     } else if (theOperator && isPoint) {
       let selectedDigit = Number(e.target.textContent);
       theModifiedNumber = `${theModifiedNumber + selectedDigit}`;
       allLastDigits[0] = theModifiedNumber;
       showDisplayLastDigits(allLastDigits);
-      console.log(allLastDigits);
     }
   });
 });
@@ -131,7 +131,6 @@ pointDigit.addEventListener("click", (e) => {
       getTheNumber = allLastDigits.join("");
       theModifiedNumber = `${getTheNumber + selectedDigit}`;
       isPoint = true;
-      console.log(allLastDigits, isPoint);
       showDisplayLastDigits(allLastDigits + ".");
     } else {
       getTheNumber = allLastDigits[allLastDigits.length - 1];
@@ -147,54 +146,64 @@ allOperator.forEach((digit) => {
     selectedOparator.push(operatorType);
     showDisplaysOperator(operatorSymbol);
     isPoint = false;
-    console.log(operatorType);
   });
 });
 
 equalBtn.addEventListener("click", (e) => {
   firstDigitNumber = Number(allFirstDigits);
   lastDigitNumber = Number(allLastDigits);
-  switch (operatorType) {
-    case "sum":
-      finalResult = firstDigitNumber + lastDigitNumber;
-      showDisplaysResult(finalResult);
-      break;
+  if (allLastDigits.length > 0) {
+    switch (operatorType) {
+      case "sum":
+        finalResult = firstDigitNumber + lastDigitNumber;
+        break;
 
-    case "sub":
-      finalResult = firstDigitNumber - lastDigitNumber;
-      showDisplaysResult(finalResult);
-      break;
+      case "sub":
+        finalResult = firstDigitNumber - lastDigitNumber;
+        break;
 
-    case "multiply":
-      finalResult = firstDigitNumber * lastDigitNumber;
-      showDisplaysResult(finalResult);
-      break;
+      case "multiply":
+        finalResult = firstDigitNumber * lastDigitNumber;
+        break;
 
-    case "divide":
-      finalResult = firstDigitNumber / lastDigitNumber;
-      showDisplaysResult(finalResult);
-      break;
+      case "divide":
+        finalResult = firstDigitNumber / lastDigitNumber;
+        break;
+    }
+    showDisplaysResult(finalResult);
   }
 });
 
 backSpaceEl.addEventListener("click", (e) => {
-  if (!theOperator) {
-    allFirstDigits.pop();
-    showDisplayFirstDigits(allFirstDigits);
-    console.log(allFirstDigits);
-    if (allFirstDigits.length === 0) {
-      showDisplayFirstDigits([0]);
+  if (isResult) {
+    getClearAll();
+  } else if (!isResult) {
+    if (!theOperator) {
+      // allFirstDigits.pop();
+
+      if (allFirstDigits[0] == "") {
+        allFirstDigits = [];
+        showDisplayFirstDigits([0]);
+      } else if (!(allFirstDigits[0] == "") && allFirstDigits.length > 0) {
+        allFirstDigits[0] = allFirstDigits[0].slice(0, -1);
+        showDisplayFirstDigits(allFirstDigits);
+      }
+    } else if (theOperator && isPoint) {
+      allLastDigits[0] = allLastDigits[0].slice(0, -1);
+      showDisplayLastDigits(allLastDigits);
+
+      if (allLastDigits[0].length < 1) {
+        allLastDigits = [];
+        theModifiedNumber = "";
+      }
+    } else if (theOperator && allLastDigits.length !== 0) {
+      allLastDigits[0] = allLastDigits[0].slice(0, -1);
+      showDisplayLastDigits(allLastDigits);
     }
-  } else if (theOperator && allLastDigits.length === 0) {
-    hideDisplaysOperator();
-  } else if (theOperator && allLastDigits.length !== 0) {
-    allLastDigits.pop();
-    showDisplayLastDigits(allLastDigits);
-    console.log(allLastDigits);
   }
 });
 
-clearEverything.addEventListener("click", (e) => {
+function getClearAll() {
   allFirstDigits = [];
   hideDisplayFirstDigits(allFirstDigits);
 
@@ -206,4 +215,8 @@ clearEverything.addEventListener("click", (e) => {
 
   theModifiedNumber = 0;
   isPoint = false;
-});
+
+  calculationAfter.classList.remove("have_result");
+}
+
+clearEverything.addEventListener("click", getClearAll);
