@@ -2,20 +2,25 @@
 let allFirstDigits = [];
 let allLastDigits = [];
 let theOperator = false;
+let isPoint = false;
 let selectedOparator = [];
+let operatorType;
 let finalResult = 0;
 
 const allNumberDigit = document.querySelectorAll(".number");
 const allOperator = document.querySelectorAll(".operator_digit");
 const displayFirstDigits = document.querySelector(".first_digit");
 const displayLastDigits = document.querySelector(".last_digit");
+const displayResult = document.querySelector(".result");
 const backSpaceEl = document.getElementById("backspace");
+const pointDigit = document.getElementById("point");
+const equalBtn = document.getElementById("equal");
 const clearEverything = document.getElementById("c");
 const displayOperator = document.querySelector(".operator");
 
-function showDisplayFirstDigits(theArray) {
-  let theFirstNumber = theArray.join("");
-  displayFirstDigits.textContent = theFirstNumber;
+function showDisplayFirstDigits(displayText) {
+  // let theFirstNumber = theArray.join("");
+  displayFirstDigits.textContent = displayText;
   //   console.log(allFirstDigits);
 }
 
@@ -24,9 +29,9 @@ function hideDisplayFirstDigits() {
   //   console.log(allFirstDigits);
 }
 
-function showDisplayLastDigits(theArray) {
-  let theLastNumber = theArray.join("");
-  displayLastDigits.textContent = theLastNumber;
+function showDisplayLastDigits(displayText) {
+  // let theLastNumber = theArray.join("");
+  displayLastDigits.textContent = displayText;
   displayLastDigits.style.display = "inline-block";
   //   console.log(allFirstDigits);
 }
@@ -47,7 +52,20 @@ function hideDisplaysOperator(operator) {
   displayOperator.textContent = "";
   displayOperator.style.display = "none";
   theOperator = false;
-  console.log(theOperator);
+  // console.log(theOperator);
+}
+
+function showDisplaysResult(result) {
+  displayResult.textContent = "";
+  displayResult.textContent = result;
+  displayResult.style.display = "block";
+  // console.log(theOperator);
+}
+
+function hideDisplaysResult(result) {
+  displayResult.textContent = "";
+  displayResult.style.display = "none";
+  // console.log(theOperator);
 }
 
 function backSpace(allFirstDigits) {
@@ -56,28 +74,107 @@ function backSpace(allFirstDigits) {
 
 allNumberDigit.forEach((digit) => {
   digit.addEventListener("click", (e) => {
-    if (!theOperator) {
-      let selectedDigit = Number(e.target.textContent);
-      allFirstDigits.push(selectedDigit);
+    let selectedDigit = Number(e.target.textContent);
+    if (!theOperator && !isPoint) {
+      // theDigit = allFirstDigits[0] + selectedDigit;
+
+      theDigit =
+        allFirstDigits.length !== 0
+          ? `${allFirstDigits[0] + selectedDigit}`
+          : `${selectedDigit}`;
+
+      allFirstDigits[0] = theDigit;
       showDisplayFirstDigits(allFirstDigits);
-      console.log();
-    } else {
+      // ***
+    } else if (!theOperator && isPoint) {
+      theModifiedNumber = `${theModifiedNumber + selectedDigit}`;
+      allFirstDigits[0] = theModifiedNumber;
+      showDisplayFirstDigits(allFirstDigits);
+      // console.log(isPoint);
+    } else if (theOperator && !isPoint) {
       let selectedDigit = Number(e.target.textContent);
-      allLastDigits.push(selectedDigit);
+
+      theDigit =
+        allLastDigits.length !== 0
+          ? `${allLastDigits[0] + selectedDigit}`
+          : `${selectedDigit}`;
+
+      allLastDigits[0] = theDigit;
+      showDisplayLastDigits(allLastDigits);
+      console.log(allLastDigits);
+    } else if (theOperator && isPoint) {
+      let selectedDigit = Number(e.target.textContent);
+      theModifiedNumber = `${theModifiedNumber + selectedDigit}`;
+      allLastDigits[0] = theModifiedNumber;
       showDisplayLastDigits(allLastDigits);
       console.log(allLastDigits);
     }
   });
 });
 
+let theModifiedNumber = 0;
+pointDigit.addEventListener("click", (e) => {
+  let selectedDigit = e.target.textContent;
+  if (!theOperator) {
+    if (allFirstDigits.length !== 0) {
+      getTheNumber = allFirstDigits.join("");
+      theModifiedNumber = `${getTheNumber + selectedDigit}`;
+      isPoint = true;
+      showDisplayFirstDigits(allFirstDigits + ".");
+    } else {
+      getTheNumber = allFirstDigits[allFirstDigits.length - 1];
+    }
+    allFirstDigits = [];
+    // showDisplayFirstDigits(allFirstDigits);
+  } else {
+    if (allLastDigits.length !== 0) {
+      getTheNumber = allLastDigits.join("");
+      theModifiedNumber = `${getTheNumber + selectedDigit}`;
+      isPoint = true;
+      console.log(allLastDigits, isPoint);
+      showDisplayLastDigits(allLastDigits + ".");
+    } else {
+      getTheNumber = allLastDigits[allLastDigits.length - 1];
+    }
+    // allLastDigits = [];
+  }
+});
+
 allOperator.forEach((digit) => {
   digit.addEventListener("click", (e) => {
     let operatorSymbol = e.target.textContent;
-    let operatorType = e.target.id;
+    operatorType = e.target.id;
     selectedOparator.push(operatorType);
     showDisplaysOperator(operatorSymbol);
-    console.log(selectedOparator);
+    isPoint = false;
+    console.log(operatorType);
   });
+});
+
+equalBtn.addEventListener("click", (e) => {
+  firstDigitNumber = Number(allFirstDigits);
+  lastDigitNumber = Number(allLastDigits);
+  switch (operatorType) {
+    case "sum":
+      finalResult = firstDigitNumber + lastDigitNumber;
+      showDisplaysResult(finalResult);
+      break;
+
+    case "sub":
+      finalResult = firstDigitNumber - lastDigitNumber;
+      showDisplaysResult(finalResult);
+      break;
+
+    case "multiply":
+      finalResult = firstDigitNumber * lastDigitNumber;
+      showDisplaysResult(finalResult);
+      break;
+
+    case "divide":
+      finalResult = firstDigitNumber / lastDigitNumber;
+      showDisplaysResult(finalResult);
+      break;
+  }
 });
 
 backSpaceEl.addEventListener("click", (e) => {
@@ -105,5 +202,8 @@ clearEverything.addEventListener("click", (e) => {
   hideDisplayLastDigits(allLastDigits);
 
   hideDisplaysOperator();
-  console.log(allFirstDigits, allLastDigits);
+  hideDisplaysResult();
+
+  theModifiedNumber = 0;
+  isPoint = false;
 });
