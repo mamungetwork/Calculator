@@ -75,13 +75,23 @@ main {
   gap: 10px;
 }
 .calculator_container .result,
-.calculator_container .calculation {
+.calculator_container .calculation,
+.calculator_container .empty {
   font-size: 42px;
   line-height: 42px;
   font-weight: 600;
   word-break: break-all;
 }
 .calculator_container .result {
+  display: none;
+}
+.calculator_container .calculation {
+  display: none;
+}
+.calculator_container .calculation.clicked {
+  display: block;
+}
+.calculator_container .hide {
   display: none;
 }
 .calculator_container .result.have_result {

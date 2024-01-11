@@ -4,6 +4,7 @@ const displayBtn = document.querySelectorAll(".is_display");
 const allOperator = document.querySelectorAll(".operator");
 const displayCalculation = document.querySelector(".calculation");
 const displayResult = document.querySelector(".result");
+const emptyDisplay = document.querySelector(".empty");
 const cleanAllBtn = document.getElementById("c");
 const backBtn = document.getElementById("backspace");
 const equalBtn = document.getElementById("equal");
@@ -11,17 +12,58 @@ const modulasBtn = document.getElementById("modulas");
 
 let isModulas = false;
 let isResult = false;
+let isOperator = false;
 let errorText;
 
-let specialChar = ["+", "-", "%", "×", "÷", "."];
+let specialChar = ["+", "-", "%", "×", "÷"];
 displayBtn.forEach((btn) => {
   btn.addEventListener("click", (e) => {
     let displayText = displayCalculation.textContent;
     let btnText = e.target.textContent;
     let btnValue = e.target.value;
 
+    hideZero();
+
     let lastChar = displayText.slice(-1);
     let isLastCharSpecial = specialChar.includes(lastChar);
+
+    if (btnValue === "%" && isOperator && !isResult) {
+      return;
+    }
+
+    if (btnValue === "." && !isOperator) {
+      if (displayText.includes(".")) {
+        return;
+      }
+    } else if (btnValue === "." && isOperator) {
+      let theOperator;
+      specialChar.forEach((char) => {
+        if (displayText.includes(char)) {
+          theOperator = char;
+        }
+      });
+
+      let displayArray = displayText.split(theOperator);
+      let lastItem = displayArray[displayArray.length - 1];
+
+      if (lastItem.includes(".")) {
+        return;
+      }
+    }
+
+    if (lastChar === "." && lastChar === btnValue) {
+      return;
+    }
+    if (
+      isModulas &&
+      (btnValue === "+" ||
+        btnValue === "-" ||
+        btnValue === "*" ||
+        btnValue === "/" ||
+        btnValue === "%")
+    ) {
+      return;
+    }
 
     if (!isResult) {
       if (specialChar.includes(btnText) && isLastCharSpecial) {
@@ -30,7 +72,7 @@ displayBtn.forEach((btn) => {
         return;
       }
       showToDisplayText(displayText + btnText);
-    } else {
+    } else if (isResult) {
       let displayText = displayResult.textContent;
       resultEdit();
       showToDisplayText(displayText + btnText);
@@ -46,10 +88,13 @@ displayBtn.forEach((btn) => {
 });
 
 equalBtn.addEventListener("click", (e) => {
-  if (isModulas) {
-    modulasHandle();
-  } else {
-    handleCalculation();
+  if (displayCalculation.textContent !== "") {
+    if (isModulas) {
+      modulasHandle();
+    } else {
+      handleCalculation();
+    }
+    isModulas = false;
   }
 });
 
@@ -62,17 +107,38 @@ cleanAllBtn.addEventListener("click", (e) => {
 backBtn.addEventListener("click", (e) => {
   backspaceHandle();
   textResize();
+  let displayText = displayCalculation.textContent;
+
+  if (displayText.length === 0) {
+    showZero();
+  }
+  isModulas = false;
+  isOperator = false;
 });
 
 modulasBtn.addEventListener("click", (e) => {
-  isModulas = true;
+  // let displayText = displayCalculation.textContent;
+  if (!isOperator) {
+    isModulas = true;
+  }
+
+  if (isResult) {
+    resultEdit();
+  }
 });
+
 allOperator.forEach((btn) => {
   if (isResult) {
     btn.addEventListener("click", (e) => {
       resultEdit();
     });
   }
+
+  btn.addEventListener("click", (e) => {
+    if (e.target.value != "%") {
+      isOperator = true;
+    }
+  });
 });
 
 function showToDisplayText(text) {
@@ -107,6 +173,17 @@ function hideToDisplayResult(result) {
   displayCalculation.classList.remove("have_result");
 }
 
+function showZero() {
+  displayResult.classList.add("hide");
+  emptyDisplay.classList.remove("hide");
+  displayCalculation.classList.remove("clicked");
+}
+
+function hideZero() {
+  displayCalculation.classList.add("clicked");
+  emptyDisplay.classList.add("hide");
+}
+
 function backspaceHandle() {
   if (isResult) {
     resultEdit();
@@ -115,6 +192,7 @@ function backspaceHandle() {
       displayCalculation.textContent = "";
       isModulas = false;
       errorText = false;
+      isOperator = false;
     } else {
       displayCalculation.textContent = displayCalculation.textContent.slice(
         0,
@@ -126,7 +204,9 @@ function backspaceHandle() {
 function cleanAllDisplay() {
   isModulas = false;
   isResult = false;
+  isOperator = false;
   displayCalculation.textContent = "";
+  showZero();
 }
 
 function handleCalculation() {
@@ -147,7 +227,6 @@ function handleCalculation() {
   } catch (error) {
     displayCalculation.classList.add("math_error");
     errorText = error;
-    console.log(error);
   }
 }
 
@@ -171,11 +250,11 @@ function modulasHandle() {
 }
 
 function resultEdit() {
-  isResult = false;
-  isModulas = false;
   let currentResult = displayResult.textContent;
   displayCalculation.textContent = currentResult;
   hideToDisplayResult();
+  isResult = false;
+  isModulas = false;
 }
 
 function textResize() {
