@@ -14,11 +14,12 @@ let isModulas = false;
 let isResult = false;
 let isOperator = false;
 let errorText;
+let displayText;
 
 let specialChar = ["+", "-", "%", "×", "÷"];
 displayBtn.forEach((btn) => {
   btn.addEventListener("click", (e) => {
-    let displayText = displayCalculation.textContent;
+    displayText = displayCalculation.textContent;
     let btnText = e.target.textContent;
     let btnValue = e.target.value;
 
@@ -266,3 +267,7 @@ function textResize() {
     displayCalculation.style.lineHeight = "";
   }
 }
+document.addEventListener("keyup", (e) => {
+  let inputKey = e.key;
+  console.log(inputKey);
+});
