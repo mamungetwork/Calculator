@@ -95,8 +95,10 @@ equalBtn.addEventListener("click", (e) => {
     } else {
       handleCalculation();
     }
-    isModulas = false;
   }
+  isResult = true;
+  isModulas = false;
+  isOperator = false;
 });
 
 cleanAllBtn.addEventListener("click", (e) => {
@@ -126,6 +128,7 @@ modulasBtn.addEventListener("click", (e) => {
   if (isResult) {
     resultEdit();
   }
+  console.log(isModulas);
 });
 
 allOperator.forEach((btn) => {
@@ -149,6 +152,7 @@ function showToDisplayText(text) {
 function showToDisplayResult(result) {
   if (!Number(result)) {
     showToDisplayText("Error");
+    console.log(result);
   } else {
     displayResult.style.display = "block";
     displayCalculation.classList.add("have_result");
@@ -236,6 +240,7 @@ function modulasHandle() {
   let a, b, c;
   let theString = displayCalculation.textContent;
   let newArray = theString.split(/([%])/);
+  console.log(theString);
   if (newArray.length <= 3) {
     [a, b, c] = newArray;
     a = Number(a);
